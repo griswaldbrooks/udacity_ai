@@ -1,5 +1,5 @@
 import unittest
-import histogram_filter
+from histogram import localize
 
 class TestHistogramFilter(unittest.TestCase):
     
@@ -60,13 +60,12 @@ class TestHistogramFilter(unittest.TestCase):
         motions = [[0,0], [0,1]]
         sensor_right = 0.8
         p_move = 1.0
-        correct_answer = (
-            [[0.03333333333, 0.03333333333, 0.03333333333],
-            [0.13333333333, 0.13333333333, 0.53333333333],
-            [0.03333333333, 0.03333333333, 0.03333333333]])
-        p = localize(colors,measurements,motions,sensor_right,p_move)
-        
+        correct_answer = ([[0.03333333333, 0.03333333333, 0.03333333333],
+                           [0.13333333333, 0.13333333333, 0.53333333333],
+                           [0.03333333333, 0.03333333333, 0.03333333333]])
+        p = localize(colors,measurements,motions,sensor_right,p_move)        
         self.assertEqual(p, correct_answer)
+
         # test 5
         colors = [['G', 'G', 'G'],
                   ['G', 'R', 'R'],
@@ -75,13 +74,12 @@ class TestHistogramFilter(unittest.TestCase):
         motions = [[0,0], [0,1]]
         sensor_right = 1.0
         p_move = 1.0
-        correct_answer = (
-            [[0.0, 0.0, 0.0],
-            [0.0, 0.0, 1.0],
-            [0.0, 0.0, 0.0]])
-
+        correct_answer = ([[0.0, 0.0, 0.0],
+                           [0.0, 0.0, 1.0],
+                           [0.0, 0.0, 0.0]])
         p = localize(colors,measurements,motions,sensor_right,p_move)
         self.assertEqual(p, correct_answer)
+
         # test 6
         colors = [['G', 'G', 'G'],
                   ['G', 'R', 'R'],
@@ -90,11 +88,9 @@ class TestHistogramFilter(unittest.TestCase):
         motions = [[0,0], [0,1]]
         sensor_right = 0.8
         p_move = 0.5
-        correct_answer = (
-            [[0.0289855072, 0.0289855072, 0.0289855072],
-            [0.0724637681, 0.2898550724, 0.4637681159],
-            [0.0289855072, 0.0289855072, 0.0289855072]])
-    
+        correct_answer = ([[0.0289855072, 0.0289855072, 0.0289855072],
+                           [0.0724637681, 0.2898550724, 0.4637681159],
+                           [0.0289855072, 0.0289855072, 0.0289855072]])
         p = localize(colors,measurements,motions,sensor_right,p_move)
         self.assertEqual(p, correct_answer)
         # test 7
@@ -105,13 +101,12 @@ class TestHistogramFilter(unittest.TestCase):
         motions = [[0,0], [0,1]]
         sensor_right = 1.0
         p_move = 0.5
-        correct_answer = (
-            [[0.0, 0.0, 0.0],
-            [0.0, 0.33333333, 0.66666666],
-            [0.0, 0.0, 0.0]])
-
+        correct_answer = ([[0.0, 0.0, 0.0],
+                           [0.0, 0.33333333, 0.66666666],
+                           [0.0, 0.0, 0.0]])
         p = localize(colors,measurements,motions,sensor_right,p_move)
         self.assertEqual(p, correct_answer)
+
     def test_long_movement(self):
         """ Method to test a more complicated case, with a larger map and a 
             longer run.
