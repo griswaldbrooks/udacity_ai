@@ -45,34 +45,51 @@
 #  [1,0] - down
 #  [-1,0] - up
 
-def sense(p, Z):
-    q=[]
+def sense(p, z, wmap, pHit):
+    # Initialize the posterior map.
+    q = [[0 for col in range(len(p[0]))] for row in range(len(p))]
+    # Update the priors.
     for i in range(len(p)):
-        hit = (Z == world[i]) 
-        q.append(p[i] * (hit * pHit + (1-hit) * pMiss))
-    s = sum(q)
-    for i in range(len(q)):
-        q[i] = q[i] / s
+        for j in range(len(p[0])):
+            hit = (z == wmap[i][j]) 
+            q[i][j] = p[i][j] * (hit * pHit + (1 - hit) * (1 - pHit))
+
+    # Get the normalization constant.
+    s = sum([sum(row) for row in q])
+
+    # Update the posterior.
+    for i in range(len(p)):
+        for j in range(len(p[0])):
+            q[i][j] = q[i][j] / s
+
     return q
 
-def move(p, U):
-    q = []
-    for i in range(len(p)):
-        s = pExact * p[(i-U) % len(p)]
-        s = s + pOvershoot * p[(i-U-1) % len(p)]
-        s = s + pUndershoot * p[(i-U+1) % len(p)]
-        q.append(s)
-    return q
+def move(p, u, p_move):
+    # Initialize the posterior map.
+    q = [[0 for col in range(len(p[0]))] for row in range(len(p))]
 
-def localize(colors, measurements, motions, sensor_right, p_move):
-    # initializes p to a uniform distribution over a grid of the same dimensions as colors
-    pinit = 1.0 / float(len(colors)) / float(len(colors[0]))
-    p = [[pinit for row in range(len(colors[0]))] for col in range(len(colors))]
-                    
-    # >>> Insert your code here <<<
-                            
-    return p
+    # Update the priors.
+    for i in range(len(p)):
+        for j in range(len(p[0])):
+            #s = p_move * p[(i - u[0]) % len(p)][(j - u[1]) % len(p[0])]
+            #s = s + (1 - p_move) * p[i][j]
+            #q[i][j] = s
+            q[(i + u[0]) % len(p)][(j + u[1]) % len(p[0])] += p_move * p[i][j]
+            q[i][j] += (1 - p_move) * p[i][j]
+    return q
 
 def show(p):
     rows = ['[' + ','.join(map(lambda x: '{0:.5f}'.format(x),r)) + ']' for r in p]
     print '[' + ',\n '.join(rows) + ']'
+
+def localize(colors, measurements, motions, sensor_right, p_move):
+    # initializes p to a uniform distribution over a grid of the same dimensions as colors
+    pinit = 1.0 / float(len(colors)) / float(len(colors[0]))
+    p = [[pinit for col in range(len(colors[0]))] for row in range(len(colors))]
+    for z, u in zip(measurements, motions):
+        p = move(p, u, p_move)
+        p = sense(p, z, colors, sensor_right)
+
+    return p
+
+

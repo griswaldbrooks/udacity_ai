@@ -1,5 +1,5 @@
 import unittest
-from histogram.histogram_filter import localize
+from histogram.histogram_filter import localize, show
 
 class TestHistogramFilter(unittest.TestCase):
     
@@ -19,7 +19,9 @@ class TestHistogramFilter(unittest.TestCase):
                            [0.0, 0.0, 0.0]])
         
         p = localize(colors, measurements, motions, sensor_right, p_move)
-        self.assertEqual(p, correct_answer)
+        for prow, crow in zip(p, correct_answer):
+            for pel, cel in zip(prow, crow):
+                self.assertAlmostEqual(pel, cel, places=3)
 
         # test 2
         colors = [['G', 'G', 'G'],
@@ -33,8 +35,10 @@ class TestHistogramFilter(unittest.TestCase):
                            [0.0, 0.5, 0.5],
                            [0.0, 0.0, 0.0]])
         p = localize(colors, measurements, motions, sensor_right, p_move)
-        self.assertEqual(p, correct_answer)
-        
+        for prow, crow in zip(p, correct_answer):
+            for pel, cel in zip(prow, crow):
+                self.assertAlmostEqual(pel, cel, places=3)
+       
         # test 3
         colors = [['G', 'G', 'G'],
                   ['G', 'R', 'R'],
@@ -47,7 +51,9 @@ class TestHistogramFilter(unittest.TestCase):
                            [0.06666666666, 0.26666666666, 0.26666666666],
                            [0.06666666666, 0.06666666666, 0.06666666666]])
         p = localize(colors, measurements, motions, sensor_right, p_move)
-        self.assertEqual(p, correct_answer)
+        for prow, crow in zip(p, correct_answer):
+            for pel, cel in zip(prow, crow):
+                self.assertAlmostEqual(pel, cel, places=3)
 
     def test_small_movement(self):
         """ Method to test localization using small maps and short movements.
@@ -64,7 +70,10 @@ class TestHistogramFilter(unittest.TestCase):
                            [0.13333333333, 0.13333333333, 0.53333333333],
                            [0.03333333333, 0.03333333333, 0.03333333333]])
         p = localize(colors,measurements,motions,sensor_right,p_move)        
-        self.assertEqual(p, correct_answer)
+
+        for prow, crow in zip(p, correct_answer):
+            for pel, cel in zip(prow, crow):
+                self.assertAlmostEqual(pel, cel, places=3)
 
         # test 5
         colors = [['G', 'G', 'G'],
@@ -78,7 +87,9 @@ class TestHistogramFilter(unittest.TestCase):
                            [0.0, 0.0, 1.0],
                            [0.0, 0.0, 0.0]])
         p = localize(colors,measurements,motions,sensor_right,p_move)
-        self.assertEqual(p, correct_answer)
+        for prow, crow in zip(p, correct_answer):
+            for pel, cel in zip(prow, crow):
+                self.assertAlmostEqual(pel, cel, places=3)
 
         # test 6
         colors = [['G', 'G', 'G'],
@@ -92,7 +103,10 @@ class TestHistogramFilter(unittest.TestCase):
                            [0.0724637681, 0.2898550724, 0.4637681159],
                            [0.0289855072, 0.0289855072, 0.0289855072]])
         p = localize(colors,measurements,motions,sensor_right,p_move)
-        self.assertEqual(p, correct_answer)
+        for prow, crow in zip(p, correct_answer):
+            for pel, cel in zip(prow, crow):
+                self.assertAlmostEqual(pel, cel, places=3)
+        
         # test 7
         colors = [['G', 'G', 'G'],
                   ['G', 'R', 'R'],
@@ -105,7 +119,9 @@ class TestHistogramFilter(unittest.TestCase):
                            [0.0, 0.33333333, 0.66666666],
                            [0.0, 0.0, 0.0]])
         p = localize(colors,measurements,motions,sensor_right,p_move)
-        self.assertEqual(p, correct_answer)
+        for prow, crow in zip(p, correct_answer):
+            for pel, cel in zip(prow, crow):
+                self.assertAlmostEqual(pel, cel, places=3)
 
     def test_long_movement(self):
         """ Method to test a more complicated case, with a larger map and a 
@@ -134,7 +150,9 @@ class TestHistogramFilter(unittest.TestCase):
                      p_move = 0.8)
         
         # Check result.
-        self.assertEqual(p, correct_answer)
+        for prow, crow in zip(p, correct_answer):
+            for pel, cel in zip(prow, crow):
+                self.assertAlmostEqual(pel, cel, places=3)
 
 if __name__ == '__main__':
     unittest.main()
