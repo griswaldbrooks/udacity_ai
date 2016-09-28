@@ -1,5 +1,5 @@
 import unittest
-from histogram import localize
+from histogram.histogram_filter import localize
 
 class TestHistogramFilter(unittest.TestCase):
     
